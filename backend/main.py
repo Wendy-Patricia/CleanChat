@@ -1,15 +1,14 @@
-# backend/main.py
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from routers import analyze
-app = FastAPI(title="Cyberbullying Analyzer API")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # depois trocar pelo domínio final
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-app.include_router(analyze.router, prefix="/api")
-@app.get("/")
-def health_check():
+
+from backend.core.logging import setup_logging
+from backend.routers import analyze
+
+setup_logging()
+app = FastAPI(title="YouTube Moderation API", version="1.1.0")
+
+app.include_router(analyze.router)
+
+
+@app.get("/health")
+def health():
     return {"status": "ok"}
